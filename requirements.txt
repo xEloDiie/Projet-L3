@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Flask
 pymongo
 argon2-cffi
@@ -5,3 +6,13 @@ cryptography
 pyotp
 flask-limiter
 flask-talisman
+=======
+Flask
+pymongo
+argon2-cffi
+cryptography
+pyotp
+flask-limiter
+flask-talisman
+python-dotenv
+>>>>>>> 3b67d69 (Premier commit du projet via VSCode)

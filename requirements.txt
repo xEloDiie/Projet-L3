@@ -1,0 +1,7 @@
+Flask
+pymongo
+argon2-cffi
+cryptography
+pyotp
+flask-limiter
+flask-talisman

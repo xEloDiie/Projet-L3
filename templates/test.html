@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+
+<html>
+    <p> HEEovjsojesoijesijsjoise</p>
+</html>
+
+{% if config['DEBUG'] %}
+<script>
+    setInterval(() => {
+        fetch(window.location.href, { cache: "no-store" })
+            .then(() => location.reload());
+    }, 2000);
+</script>
+{% endif %}

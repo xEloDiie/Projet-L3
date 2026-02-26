@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}404HackNotFound{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <span class="navbar-brand">404HackNotFound</span>
+
+        <div class="ms-auto d-flex align-items-center">
+
+            <!-- Dashboard button -->
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light btn-sm me-2">
+                Dashboard
+            </a>
+
+            <!-- User dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ session.get('username', 'Invité') }}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                    <li><span class="dropdown-item-text"><strong>Nom :</strong> {{ session.get('username', 'Invité') }}</span></li>
+                    <li><span class="dropdown-item-text"><strong>Rôle :</strong> {{ session.get('role', 'visitor') }}</span></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}">Déconnexion</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+<main class="container mt-4">
+    {% block content %}{% endblock %}
+</main>
+
+<!-- Toggle Jour/Nuit -->
+<div class="theme-toggle position-fixed bottom-0 end-0 m-3">
+    <input type="checkbox" id="themeSwitch" hidden>
+    <label for="themeSwitch" class="btn btn-light btn-sm d-flex align-items-center">
+        <span id="sun" class="me-1">🌞</span>
+        <span id="moon" class="me-1 d-none">🌜</span>
+        <span>Mode</span>
+    </label>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+{% block scripts %}
+<script>
+    const themeSwitch = document.getElementById('themeSwitch');
+    const body = document.body;
+    const sun = document.getElementById('sun');
+    const moon = document.getElementById('moon');
+
+    if (localStorage.getItem('theme') === 'dark') {
+        body.classList.add('dark-theme');
+        themeSwitch.checked = true;
+        sun.classList.add('d-none');
+        moon.classList.remove('d-none');
+    }
+
+    themeSwitch.addEventListener('change', () => {
+        body.classList.toggle('dark-theme');
+        if (body.classList.contains('dark-theme')) {
+            sun.classList.add('d-none');
+            moon.classList.remove('d-none');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            sun.classList.remove('d-none');
+            moon.classList.add('d-none');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+</script>
+{% endblock %}
+
+</body>
+</html>

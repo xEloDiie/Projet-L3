@@ -1,20 +1,57 @@
-{% extends "base.html" %}
+{% extends "base_public.html" %}
 
 {% block title %}Inscription{% endblock %}
 
 {% block content %}
-<h2>Inscription</h2>
-<form method="POST" class="mt-3 register-form">
-    <div class="mb-3">
-        <label class="form-label">Nom d'utilisateur</label>
-        <input type="text" name="username" class="form-control" required>
+<div class="login-page-wrapper">
+
+    <!-- Branding en haut à gauche -->
+    <div class="branding-top d-flex align-items-center">
+        <img src="{{ url_for('static', filename='images/cyber.png') }}" 
+             alt="Cybersecurity"
+             class="cyber-image me-3">
+
+        <div>
+            <h1 class="brand-title">404HackNotFound</h1>
+            <p class="brand-subtitle">Rejoignez la plateforme cybersécurité</p>
+        </div>
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Mot de passe</label>
-        <input type="password" name="password" class="form-control" required>
-    </div>
+    <!-- Card centrée -->
+    <div class="login-wrapper">
+        <div class="card login-card shadow-lg">
+            <div class="card-body p-4">
 
-    <button type="submit" class="btn btn-success">Créer un compte</button>
-</form>
+                <h4 class="text-center mb-4">Créer un compte</h4>
+
+                <form method="POST" action="{{ url_for('register') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Nom d'utilisateur</label>
+                        <input type="text" name="username" class="form-control custom-input" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" name="password" class="form-control custom-input" required>
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Créer un compte
+                        </button>
+                    </div>
+                </form>
+
+                <hr>
+
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-secondary">
+                        Retour à la connexion
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -113,6 +113,8 @@ def login():
 
         if user and user["password"] == password:
             session["user_id"] = user["_id"]
+            session["username"] = user["username"]
+            session["role"] = user["role"]
             return redirect(url_for("dashboard"))
         else:
             flash("Identifiants incorrects.")
@@ -154,6 +156,12 @@ def guest_login():
     session["username"] = "Invité"
 
     return redirect(url_for("dashboard"))
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
 
 
 # Vérifier la connexion MongoDB au lancement

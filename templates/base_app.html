@@ -20,17 +20,91 @@
             <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light btn-sm me-2">
                 Dashboard
             </a>
+            <a class="btn btn-outline-light btn-sm me-2" href="{{ url_for('leaderboard') }}">
+                Classement
+            </a>
 
-            <!-- User dropdown -->
+            {% if session.get('role') == 'admin' %}
+                <a href="{{ url_for('admin_challenges') }}" class="btn btn-outline-warning btn-sm me-2">
+                    Admin Challenges
+                </a>
+            {% endif %}
+
+            <!-- User dropdown amélioré avec points et rang en barre -->
             <div class="dropdown">
                 <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
                     {{ session.get('username', 'Invité') }}
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-                    <li><span class="dropdown-item-text"><strong>Nom :</strong> {{ session.get('username', 'Invité') }}</span></li>
-                    <li><span class="dropdown-item-text"><strong>Rôle :</strong> {{ session.get('role', 'visitor') }}</span></li>
+
+                <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="userMenu">
+
+                    <!-- Nom et rôle -->
+                    <li>
+                        <span class="dropdown-item-text">
+                            <strong>Nom :</strong> {{ session.get('username', 'Invité') }}
+                        </span>
+                    </li>
+
+                    <li>
+                        <span class="dropdown-item-text">
+                            <strong>Rôle :</strong> {{ session.get('role', 'visitor') }}
+                        </span>
+                    </li>
+
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}">Déconnexion</a></li>
+
+                    <!-- Rang -->
+                    <li class="mb-2">
+                        {% if role == "visitor" %}
+
+                            <span class="dropdown-item-text">
+                                <strong>Rang :</strong> Invité
+                            </span>
+
+                        {% else %}
+
+                            <span class="dropdown-item-text">
+                                <strong>Rang :</strong> {{ rank }} / {{ total_players }}
+                            </span>
+
+                        {% endif %}
+                    </li>
+
+
+                    <!-- Points -->
+                    <li class="mb-2">
+
+                        {% if role == "visitor" %}
+
+                            <span class="dropdown-item-text">
+                                <strong>Points :</strong> Invité
+                            </span>
+
+                        {% else %}
+
+                            <span class="dropdown-item-text">
+                                <strong>Points :</strong> {{ points }} / {{ max_points }}
+                            </span>
+
+                            <div class="progress">
+                                <div class="progress-bar bg-success"
+                                    role="progressbar"
+                                    style="width: {{ (points / max_points * 100) if max_points > 0 else 0 }}%;">
+                                </div>
+                            </div>
+
+                        {% endif %}
+
+                    </li>
+
+                    <!-- Déconnexion -->
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item text-danger" href="{{ url_for('logout') }}">
+                            Déconnexion
+                        </a>
+                    </li>
+
                 </ul>
             </div>
 
@@ -45,7 +119,7 @@
 <!-- Toggle Jour/Nuit -->
 <div class="theme-toggle position-fixed bottom-0 end-0 m-3">
     <input type="checkbox" id="themeSwitch" hidden>
-    <label for="themeSwitch" class="btn btn-light btn-sm d-flex align-items-center">
+    <label for="themeSwitch" class="d-flex align-items-center">
         <span id="sun" class="me-1">🌞</span>
         <span id="moon" class="me-1 d-none">🌜</span>
         <span>Mode</span>

@@ -1,4 +1,6 @@
-/* Fond général */
+/* =========================
+   FOND GENERAL
+========================= */
 body {
     background: linear-gradient(135deg, #667eea, #764ba2);
     min-height: 100vh;
@@ -7,17 +9,21 @@ body {
     transition: background 0.3s, color 0.3s;
 }
 
-/* Wrapper principal */
+/* =========================
+   WRAPPER LOGIN
+========================= */
 .login-page-wrapper {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;   /* centre la card verticalement */
-    align-items: center;       /* centre horizontalement */
-    position: relative;        /* pour branding en top-left */
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
-/* Branding en haut à gauche */
+/* =========================
+   BRANDING TOP
+========================= */
 .branding-top {
     position: absolute;
     top: 20px;
@@ -36,7 +42,7 @@ body {
 .branding-top .branding-text {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* centre verticalement sur le logo */
+    justify-content: center;
 }
 
 .branding-top .brand-title {
@@ -54,26 +60,25 @@ body {
     transition: color 0.3s ease;
 }
 
-/* Carte centrée */
+/* =========================
+   LOGIN CARD
+========================= */
 .login-wrapper {
     width: 100%;
     max-width: 420px;
 }
 
 .login-card {
-    border: none;
     border-radius: 20px;
-    background-color: #ffffff;
     width: 100%;
     box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* Branding centré dans la card pour register et autres pages */
+/* =========================
+   CARD BRANDING
+========================= */
 .card-branding {
-    position: relative;
-    top: 0;
-    left: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -81,7 +86,7 @@ body {
 }
 
 .card-branding .cyber-image {
-    width: 70px;   /* taille normale pour la card */
+    width: 70px;
     height: 70px;
 }
 
@@ -95,19 +100,30 @@ body {
     transition: color 0.3s ease;
 }
 
-/* Inputs */
-.custom-input {
+/* =========================
+   INPUTS / TEXTAREA / SELECT
+========================= */
+.custom-input,
+.form-control,
+.form-select,
+textarea {
     border-radius: 12px;
     padding: 10px 15px;
     transition: all 0.3s ease;
 }
 
-.custom-input:focus {
+/* Focus */
+.custom-input:focus,
+.form-control:focus,
+.form-select:focus,
+textarea:focus {
     border-color: #764ba2;
     box-shadow: 0 0 0 0.2rem rgba(118, 75, 162, 0.25);
 }
 
-/* Boutons */
+/* =========================
+   BOUTONS
+========================= */
 .btn-primary {
     border-radius: 12px;
     background: linear-gradient(135deg, #667eea, #764ba2);
@@ -125,7 +141,18 @@ body {
     border-radius: 12px;
 }
 
-/* Toggle jour/nuit */
+/* =========================
+   LIST GROUP
+========================= */
+.list-group-item {
+    border-radius: 10px;
+    margin-bottom: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* =========================
+   TOGGLE JOUR / NUIT
+========================= */
 .theme-toggle {
     position: fixed;
     bottom: 15px;
@@ -153,23 +180,84 @@ body.dark-theme .theme-toggle label {
     color: #ffffff;
 }
 
-/* Mode nuit */
+/* =========================
+   MODE SOMBRE
+========================= */
 body.dark-theme {
-    background: linear-gradient(135deg, #2c3e50, #4b6cb7);
+    background: linear-gradient(135deg, #1f2937, #111827);
     color: #ffffff;
 }
 
+/* =========================
+   CARDS JOUR ET NUIT
+========================= */
+/* Jour */
+body:not(.dark-theme) .card,
+body:not(.dark-theme) .login-card,
+body:not(.dark-theme) .shadow-sm {
+    background-color: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #000000;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Nuit */
+body.dark-theme .card,
 body.dark-theme .login-card {
-    background-color: #1f2937;
+    background-color: rgba(36,48,66,0.85);
+    color: #ffffff;
+    border: 1px solid rgba(59,74,99,0.8);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-theme .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.45);
+    transition: all 0.2s ease;
+}
+
+/* =========================
+   FORMULAIRES JOUR ET NUIT
+========================= */
+/* Jour */
+body:not(.dark-theme) .form-control,
+body:not(.dark-theme) .form-select,
+body:not(.dark-theme) .custom-input,
+body:not(.dark-theme) textarea {
+    background-color: rgba(255,255,255,0.35);
+    color: #000000;
+    border: 1px solid rgba(0,0,0,0.15);
+}
+
+/* Nuit */
+body.dark-theme .form-control,
+body.dark-theme .form-select,
+body.dark-theme .custom-input,
+body.dark-theme textarea {
+    background-color: rgba(44,62,80,0.85);
+    color: #ffffff;
+    border-color: rgba(75,108,183,0.8);
+}
+
+body.dark-theme .form-control::placeholder,
+body.dark-theme textarea::placeholder {
+    color: #cccccc;
+}
+
+/* =========================
+   ALERTS
+========================= */
+body.dark-theme .alert {
+    background-color: rgba(36,48,66,0.85);
+    border: 1px solid rgba(59,74,99,0.8);
     color: #ffffff;
 }
 
-body.dark-theme .custom-input {
-    background-color: #2c3e50;
-    color: #ffffff;
-    border-color: #4b6cb7;
-}
-
+/* =========================
+   BOUTONS SOMBRE
+========================= */
 body.dark-theme .btn-primary {
     background: linear-gradient(135deg, #4b6cb7, #2c3e50);
 }
@@ -180,6 +268,251 @@ body.dark-theme .btn-outline-secondary {
     color: #ffffff;
 }
 
+/* =========================
+   BRANDING SOMBRE
+========================= */
 body.dark-theme .branding-top .brand-subtitle {
     color: #cccccc;
+}
+
+/* =========================
+   PARAGRAPHES DANS LES CARDS
+========================= */
+body.dark-theme .card p.text-muted {
+    color: #d3dce6 !important;
+}
+
+/* =========================
+   TABLEAUX LEADERBOARD
+========================= */
+table.table {
+    border-collapse: separate !important;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    width: 100%;
+    margin-bottom: 1rem;
+    transition: background 0.3s, color 0.3s;
+}
+
+table.table thead th,
+table.table tbody td {
+    padding: 10px;
+    transition: background 0.3s, color 0.3s;
+}
+
+body:not(.dark-theme) table.table thead th,
+body:not(.dark-theme) table.table tbody td {
+    background-color: rgba(255,255,255,0.25) !important;
+    color: #000000 !important;
+}
+
+body:not(.dark-theme) table.table.table-striped tbody tr:nth-of-type(odd) td {
+    background-color: rgba(245,245,245,0.2) !important;
+}
+
+body.dark-theme table.table thead th,
+body.dark-theme table.table tbody td {
+    transition: background 0.3s, color 0.3s;
+    background-color: rgba(36,48,66,0.85) !important;
+    color: #ffffff !important;
+}
+
+body.dark-theme table.table.table-striped tbody tr:nth-of-type(odd) td {
+    background-color: rgba(50,62,84,0.85) !important;
+}
+
+/* =========================
+   ARRONDIS TABLEAUX
+========================= */
+table.table thead th:first-child {
+    border-top-left-radius: 12px;
+}
+table.table thead th:last-child {
+    border-top-right-radius: 12px;
+}
+table.table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+}
+table.table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+}
+
+/* =========================
+   LIST GROUP ADMIN CHALLENGES
+========================= */
+body:not(.dark-theme) .list-group-item {
+    background-color: rgba(255,255,255,0.25);
+    color: #000000;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-theme .list-group-item {
+    background-color: rgba(36,48,66,0.85);
+    color: #ffffff;
+    border: 1px solid rgba(59,74,99,0.8);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* =========================
+   DROPDOWN USER JOUR / NUIT (COULEUR DE FOND FIXE + TEXTE)
+========================= */
+/* Mode jour */
+body:not(.dark-theme) .dropdown-menu {
+    background: linear-gradient(135deg, #667eea, #764ba2); /* même que le background du site */
+    color: #ffffff; /* texte blanc */
+    border: 1px solid rgba(255,255,255,0.3);
+    min-width: 250px;
+    padding: 15px;
+    border-radius: 12px;
+}
+
+/* Mode nuit */
+body.dark-theme .dropdown-menu {
+    background-color: #242f42; /* opaque en mode nuit */
+    border: 1px solid #3b4a63;
+    min-width: 250px;
+    padding: 15px;
+    border-radius: 12px;
+}
+
+/* Forcer le texte blanc dans le dropdown nuit */
+body.dark-theme .dropdown-menu,
+body.dark-theme .dropdown-menu .dropdown-item,
+body.dark-theme .dropdown-menu .dropdown-item-text {
+    color: #ffffff !important;
+}
+
+/* Progression barre dans dropdown */
+body:not(.dark-theme) .dropdown-menu .progress {
+    height: 18px;
+    background-color: rgba(255,255,255,0.2); /* légèrement visible sur le dégradé */
+    border-radius: 10px;
+}
+
+body.dark-theme .dropdown-menu .progress {
+    height: 18px;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+
+/* Texte et labels dans le dropdown */
+.dropdown-menu .dropdown-item-text {
+    margin-bottom: 8px;
+}
+
+/* =========================
+   NAVBAR MODE JOUR (corrigé)
+========================= */
+body:not(.dark-theme) nav.navbar {
+    background-color: #594ba2 !important; /* opaque violet */
+    border-bottom: 1px solid #5a3480;
+    backdrop-filter: none; /* suppression du blur qui rendait les clics imprécis */
+}
+
+body:not(.dark-theme) nav.navbar .navbar-brand,
+body:not(.dark-theme) nav.navbar .nav-link {
+    color: #ffffff !important;
+}
+
+/* Dropdown navbar opaque et cliquable */
+body:not(.dark-theme) .dropdown-menu {
+    background-color: #764ba2 !important; /* fond violet opaque */
+    color: #ffffff; /* texte blanc */
+    border: 1px solid #5a3480;
+    min-width: 250px;
+    padding: 15px;
+    border-radius: 12px;
+}
+
+/* Forcer le texte blanc dans le dropdown */
+body:not(.dark-theme) .dropdown-menu .dropdown-item,
+body:not(.dark-theme) .dropdown-menu .dropdown-item-text {
+    color: #ffffff !important;
+}
+
+
+/* =========================
+   NAVBAR MODE NUIT
+========================= */
+
+body.dark-theme nav.navbar {
+    background: #111827 !important;
+}
+
+body.dark-theme nav.navbar .navbar-brand,
+body.dark-theme nav.navbar .nav-link {
+    color: #ffffff !important;
+}
+
+/* Toggle Jour/Nuit */
+.theme-toggle label {
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+/* Mode jour */
+body:not(.dark-theme) .theme-toggle label {
+    background: #594ba2; /* violet clair, un peu différent du fond */
+    color: #ffffff;
+    border: 1px solid rgba(255,255,255, 0.3);
+}
+
+/* Mode nuit */
+body.dark-theme .theme-toggle label {
+    background: #1f2937;
+    color: #ffffff;
+    border: 1px solid rgba(255,255,255, 0.3);
+}
+
+/* =========================
+   BOUTON DROPUP TOP 5 JOUR / NUIT
+========================= */
+
+/* Base styles */
+.dropup .btn.dropdown-toggle {
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+/* Mode jour */
+body:not(.dark-theme) .dropup .btn.dropdown-toggle {
+    background-color: #594ba2; /* violet opaque, assorti au site */
+    color: #ffffff;
+    border: 1px solid #5a3480;
+}
+
+/* Mode nuit */
+body.dark-theme .dropup .btn.dropdown-toggle {
+    background-color: #1f2937; /* sombre, comme le toggle */
+    color: #ffffff;
+    border: 1px solid #3b4a63;
+}
+
+/* Hover effets */
+.dropup .btn.dropdown-toggle:hover {
+    opacity: 0.9;
+}
+
+/* =========================
+   Dropdown navbar - bouton Déconnexion rouge
+========================= */
+.dropdown-menu .dropdown-item.text-danger {
+    color: #ff4d4f !important;          /* texte rouge vif */
+    border: 1px solid #ff4d4f !important; /* bordure rouge */
+    border-radius: 6px;
+    padding: 5px 10px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.dropdown-menu .dropdown-item.text-danger:hover {
+    background-color: #ff4d4f !important; /* fond rouge au hover */
+    color: #ffffff !important;           /* texte blanc au hover */
 }

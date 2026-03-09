@@ -403,7 +403,7 @@ body.dark-theme .dropdown-menu .progress {
 }
 
 /* =========================
-   NAVBAR MODE JOUR (corrigé)
+   NAVBAR MODE JOUR 
 ========================= */
 body:not(.dark-theme) nav.navbar {
     background-color: #594ba2 !important; /* opaque violet */

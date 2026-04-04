@@ -1,73 +1,145 @@
-import os
+from flask import Flask, session, redirect, url_for, flash, request
+from db.mongo import logs_collection
+from flask_mail import Mail
+from datetime import datetime, timezone
 
-# Dotenv pour Python
-from dotenv import load_dotenv
+from routes.auth import auth_bp
+from routes.main import main_bp
+from routes.challenges import challenges_bp
+from routes.admin import admin_bp
 
-# Flask
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from config import Config
+from utils.security import init_security
 
-# MongoDB
-from pymongo.mongo_client import MongoClient
-from pymongo.server_api import ServerApi
+app = Flask(__name__)
+app.config.from_object(Config)
 
-# Sécurité – hashage mot de passe
-from argon2 import PasswordHasher
-from argon2.exceptions import VerifyMismatchError
+# =========================
+# SECURITY
+# =========================
+init_security(app)
 
-# Sécurité – chiffrement clé 2FA
-from cryptography.fernet import Fernet
+# =========================
+# MAIL
+# =========================
+mail = Mail(app)
+app.mail = mail
 
-# 2FA – TOTP
-import pyotp
-
-# Protection brute-force
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
-
-# Sécurisation des en-têtes HTTP
-from flask_talisman import Talisman
-
-# Tests unitaires
-import unittest
+# =========================
+# BLUEPRINTS
+# =========================
+app.register_blueprint(auth_bp)
+app.register_blueprint(main_bp)
+app.register_blueprint(challenges_bp)
+app.register_blueprint(admin_bp)
 
 
-# Charger les variables du .env
-load_dotenv()
-MONGO_URI = os.getenv("MONGO_URI")
+@app.route("/")
+def home():
+    return redirect(url_for("auth.login"))
 
-# Créer le client
-client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
+@app.before_request
+def global_security():
 
-# Sélectionner la base 404HackNotFound
-db = client["404HackNotFound"]
+    endpoint = request.endpoint or ""
 
-# Créer la collection users (sera créée automatiquement si elle n'existe pas)
-users_collection = db["users"]
+    public_routes = [
+        'auth.login',
+        'auth.register',
+        'auth.auth2fa',
+        'auth.verify_email',
+        'auth.guest_login',
+    ]
 
-# Récupérer le plus grand _id actuel
-last_user = users_collection.find_one(sort=[("_id", -1)])
+    # =========================
+    # Autorisations de base
+    # =========================
+    if endpoint.startswith("static"):
+        return
 
-# Si le dernier utilisateur n'existe pas ou _id n'est pas numérique, commencer à 1
-if last_user and isinstance(last_user["_id"], int):
-    next_id = last_user["_id"] + 1
-else:
-    next_id = 1
+    if endpoint in public_routes:
+        return
 
-# Exemple : créer un utilisateur
-user = {
-    "_id": next_id, # ID numérique
-    "username": "testuser",
-    "password": "hash_mot_de_passe", # à remplacer par Argon2 plus tard
-    "role": "user"
-}
+    # =========================
+    # Stocker dernière page
+    # =========================
+    if not endpoint.startswith("admin."):
+        session["last_page"] = request.url
 
-# Insérer l'utilisateur
-result = users_collection.insert_one(user)
-print(f"Utilisateur inséré avec _id = {user['_id']}")
+    # =========================
+    # Accès admin
+    # =========================
+    if endpoint.startswith("admin."):
+        if session.get("role") != "admin":
+            flash("Accès refusé.", "danger")
+            return redirect(session.get("last_page", url_for("main.dashboard")))
 
-# Vérifier la connexion
-try:
-    client.admin.command('ping')
-    print("Connexion à MongoDB réussie !")
-except Exception as e:
-    print("Erreur de connexion :", e)
+    # =========================
+    # Vérification connexion (hors invité)
+    # =========================
+    if "user_id" not in session and session.get("role") != "visitor":
+        return redirect(url_for("auth.login"))
+
+    # =========================
+    # Timeout uniquement user
+    # =========================
+    if "user_id" in session:
+        last_active_str = session.get("last_active")
+
+        if last_active_str:
+            try:
+                last_active = datetime.fromisoformat(last_active_str)
+                now = datetime.now(timezone.utc)
+
+                if now - last_active > Config.SESSION_TIMEOUT:
+                    logs_collection.insert_one({
+                        "timestamp": now,
+                        "username": session.get("username", "inconnu"),
+                        "action": "logout",
+                        "details": "Déconnexion automatique par inactivité"
+                    })
+
+                    flash("Vous avez été déconnecté pour inactivité.", "warning")
+                    session.clear()
+                    return redirect(url_for("auth.login"))
+
+            except:
+                session.clear()
+                return redirect(url_for("auth.login"))
+
+        session["last_active"] = datetime.now(timezone.utc).isoformat()
+
+
+@app.template_filter('paris_time')
+def paris_time_filter(dt):
+    if not dt:
+        return ""
+
+    # Si pas de timezone → on considère UTC
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+
+    # Conversion vers Paris (auto +01 / +02)
+    dt = dt.astimezone(app.config["TIMEZONE"])
+
+    return dt.strftime("%d/%m/%Y %H:%M:%S")
+
+
+@app.before_request
+def store_last_page():
+    endpoint = request.endpoint or ""
+
+    # On ignore les routes admin pour éviter de stocker une page interdite
+    if endpoint.startswith("admin."):
+        return
+
+    # On ignore les fichiers statiques
+    if endpoint.startswith("static"):
+        return
+
+    # On stocke la page actuelle
+    session["last_page"] = request.url
+    
+
+if __name__ == "__main__":
+    app.run(debug=True)

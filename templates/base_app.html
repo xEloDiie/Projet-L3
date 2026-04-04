@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}404HackNotFound{% endblock %}</title>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a href="{{ url_for('main.dashboard') }}" class="navbar-brand d-flex align-items-center">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" 
+                        alt="Logo"
+                        class="logo-image me-2">
+                    404HackNotFound
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto flex-column flex-lg-row text-end text-lg-start mt-2">
+                        <li class="nav-item mb-2 mb-lg-0 ms-2">
+                            <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-light btn-sm">Dashboard</a>
+                        </li>
+                        <li class="nav-item mb-2 mb-lg-0 ms-2">
+                            <a href="{{ url_for('main.leaderboard') }}" class="btn btn-outline-light btn-sm">Classement</a>
+                        </li>
+                        {% if session.get('role') == 'admin' %}
+                        <li class="nav-item mb-2 mb-lg-0 ms-2">
+                            <a href="{{ url_for('admin.admin_challenges') }}" class="btn btn-outline-warning btn-sm">Admin Challenges</a>
+                        </li>
+                        <li class="nav-item mb-2 mb-lg-0 ms-2">
+                            <a href="{{ url_for('admin.logs') }}" class="btn btn-outline-warning btn-sm">Logs</a>
+                        </li>
+                        {% endif %}
+                        <!-- User dropdown avec points et rang en barre -->
+                        <div class="dropdown">
+                            <button class="btn btn-secondary btn-sm dropdown-toggle ms-2" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ session.get('username', 'Invité') }}
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-end p-3 navbar-dropdown navbar-dropdown" aria-labelledby="userMenu">
+
+                                <!-- Nom et rôle -->
+                                <li>
+                                    <span class="dropdown-item-text">
+                                        <strong>Nom :</strong> {{ session.get('username', 'Invité') }}
+                                    </span>
+                                </li>
+
+                                <li>
+                                    <span class="dropdown-item-text">
+                                        <strong>Rôle :</strong> {{ session.get('role', 'visitor') }}
+                                    </span>
+                                </li>
+
+                                <li><hr class="dropdown-divider"></li>
+
+                                <!-- Rang -->
+                                <li class="mb-2">
+                                    {% if role == "visitor" %}
+
+                                        <span class="dropdown-item-text">
+                                            <strong>Rang :</strong> Invité
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="dropdown-item-text">
+                                            <strong>Rang :</strong> {{ rank }} / {{ total_players }}
+                                        </span>
+
+                                    {% endif %}
+                                </li>
+
+
+                                <!-- Points -->
+                                <li class="mb-2">
+
+                                    {% if role == "visitor" %}
+
+                                        <span class="dropdown-item-text">
+                                            <strong>Points :</strong> Invité
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="dropdown-item-text">
+                                            <strong>Points :</strong> {{ points }} / {{ max_points }}
+                                        </span>
+
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success"
+                                                role="progressbar"
+                                                style="width: {{ (points / max_points * 100) if max_points > 0 else 0 }}%;">
+                                            </div>
+                                        </div>
+
+                                    {% endif %}
+
+                                </li>
+
+                                <!-- Déconnexion ou Créer compte / Se connecter -->
+                                <li><hr class="dropdown-divider"></li>
+                                {% if role == "visitor" %}
+                                    <li>
+                                        <a class="dropdown-item text-danger" href="{{ url_for('auth.register') }}">
+                                            Créer un compte / Se connecter
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}">
+                                            Déconnexion
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Messages flash -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="container mt-3">
+                    {% for message in messages %}
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <main class="container mt-4">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Toggle Jour/Nuit -->
+        <div class="theme-toggle position-fixed bottom-0 end-0 m-3">
+            <input type="checkbox" id="themeSwitch" hidden>
+            <label for="themeSwitch" class="d-flex align-items-center">
+                <span id="sun" class="me-1">🌞</span>
+                <span id="moon" class="me-1 d-none">🌜</span>
+                <span>Mode</span>
+            </label>
+        </div>
+
+        <footer class="site-footer mt-5">
+            <div class="container py-4">
+
+                <div class="row text-center text-md-start">
+
+                    <!-- Nom du site -->
+                    <div class="col-md-4 mb-3">
+                        <h6 class="fw-bold">404HackNotFound</h6>
+                        <p class="small mb-0">
+                            Plateforme d'entraînement CTF dédiée à la cybersécurité,
+                            au pentest et à l'apprentissage du hacking éthique.
+                        </p>
+                    </div>
+
+                    <!-- Liens légaux -->
+                    <div class="col-md-4 mb-3">
+                        <h6 class="fw-bold">Informations légales</h6>
+                        <ul class="list-unstyled small">
+                            <li>
+                                <a href="{{ url_for('main.mentions_legales') }}" class="footer-link">
+                                    Mentions légales
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ url_for('main.conditions_utilisation') }}" class="footer-link">
+                                    Conditions d'utilisation
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ url_for('main.rgpd') }}" class="footer-link">
+                                    Protection des données (RGPD)
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="col-md-4 mb-3">
+                        <h6 class="fw-bold">Contact</h6>
+                        <ul class="list-unstyled small">
+                            <li><p>Nous contacter</p></li>
+                            <li>Email : contact@404hacknotfound.local</li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- Copyright -->
+                <div class="text-center small">
+                    © <span id="year"></span> 404HackNotFound • Tous droits réservés
+                </div>
+
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+        {% block scripts %}
+        <script>
+            document.getElementById("year").textContent = new Date().getFullYear();
+
+            
+            const themeSwitch = document.getElementById('themeSwitch');
+            const body = document.body;
+            const sun = document.getElementById('sun');
+            const moon = document.getElementById('moon');
+
+            if (localStorage.getItem('theme') === 'dark') {
+                body.classList.add('dark-theme');
+                themeSwitch.checked = true;
+                sun.classList.add('d-none');
+                moon.classList.remove('d-none');
+            }
+
+            themeSwitch.addEventListener('change', () => {
+                body.classList.toggle('dark-theme');
+                if (body.classList.contains('dark-theme')) {
+                    sun.classList.add('d-none');
+                    moon.classList.remove('d-none');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    sun.classList.remove('d-none');
+                    moon.classList.add('d-none');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        </script>
+        {% endblock %}
+
+    </body>
+</html>

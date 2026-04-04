@@ -1,0 +1,50 @@
+{% extends "base_public.html" %}
+
+{% block content %}
+
+<div class="legal-container">
+
+    <h1 class="legal-title">Conditions d'utilisation</h1>
+
+    <!-- Bouton retour login -->
+    <div class="back-to-login">
+        <a href="{{ url_for('dashboard') if session.get('user_id') else url_for('login') }}"
+        class="btn btn-secondary">
+            Retour
+        </a>
+    </div>
+
+    <div class="legal-card">
+        <h2>Acceptation des conditions</h2>
+        <p>
+            L'utilisation du site implique l'acceptation pleine et entière
+            des présentes conditions d'utilisation.
+        </p>
+    </div>
+
+    <div class="legal-card">
+        <h2>Utilisation du site</h2>
+        <p>
+            L'utilisateur s'engage à utiliser le site de manière responsable
+            et conforme à la législation en vigueur.
+        </p>
+    </div>
+
+    <div class="legal-card">
+        <h2>Disponibilité du service</h2>
+        <p>
+            L'éditeur du site ne garantit pas que le site soit accessible
+            en permanence ou exempt d'erreurs.
+        </p>
+    </div>
+
+    <div class="legal-card">
+        <h2>Modification des conditions</h2>
+        <p>
+            Ces conditions d'utilisation peuvent être modifiées à tout moment.
+        </p>
+    </div>
+
+</div>
+
+{% endblock %}

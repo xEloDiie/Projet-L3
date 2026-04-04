@@ -1,0 +1,85 @@
+{% extends "base_public.html" %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+<div class="login-page-wrapper">
+
+    <!-- Branding en haut à gauche -->
+    <div class="branding-top d-flex align-items-center">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" 
+             alt="Logo"
+             class="logo-image me-3">
+
+        <div>
+            <h1 class="brand-title">404HackNotFound</h1>
+            <p class="brand-subtitle">Plateforme dédiée à la cybersécurité</p>
+        </div>
+    </div>
+
+    <!-- Card centrée -->
+    <div class="login-wrapper">
+        <div class="card login-card shadow-lg">
+            <div class="card-body p-4">
+
+                <h4 class="text-center mb-4">Connexion</h4>
+
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    <!-- ✅ CSRF TOKEN -->
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="mb-3">
+                        <label class="form-label">Nom d'utilisateur</label>
+                        <input type="text" name="username" class="form-control custom-input" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Mot de passe</label>
+                        <div class="input-group">
+                            <input type="password" id="loginPassword" name="password" class="form-control custom-input" required>
+
+                            <button type="button" class="btn btn-outline-secondary" id="toggleLoginPassword">
+                                👁️
+                            </button>
+                        </div>
+
+                        <div class="mt-2">
+                            <a href="{{ url_for('auth.forgot_password') }}" class="text-alerte">
+                                Mot de passe oublié ?
+                            </a>
+                        </div>
+
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Se connecter
+                        </button>
+                    </div>
+                </form>
+
+                <hr>
+
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary">
+                        Créer un compte
+                    </a>
+
+                    <a href="{{ url_for('auth.guest_login') }}" class="btn btn-outline-secondary">
+                        Continuer en tant que visiteur
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const loginPassword = document.getElementById("loginPassword");
+const toggleLogin = document.getElementById("toggleLoginPassword");
+
+toggleLogin.addEventListener("click", () => {
+    loginPassword.type = loginPassword.type === "password" ? "text" : "password";
+});
+</script>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base_public.html" %}
+
+{% block content %}
+
+<div class="legal-container">
+
+    <h1 class="legal-title">Protection des données (RGPD)</h1>
+
+    <!-- Bouton retour login -->
+    <div class="back-to-login">
+        <a href="{{ url_for('dashboard') if session.get('user_id') else url_for('login') }}"
+        class="btn btn-secondary">
+            Retour
+        </a>
+    </div>
+
+    <div class="legal-card">
+        <h2>Collecte des données</h2>
+        <p>
+            Certaines informations peuvent être collectées dans le cadre
+            du fonctionnement du site.
+        </p>
+    </div>
+
+    <div class="legal-card">
+        <h2>Utilisation des données</h2>
+        <p>
+            Les données collectées sont utilisées uniquement pour améliorer
+            l'expérience utilisateur et le fonctionnement du site.
+        </p>
+    </div>
+
+    <div class="legal-card">
+        <h2>Partage des données</h2>
+        <p>
+            Aucune donnée personnelle n'est vendue ou transmise à des tiers.
+        </p>
+    </div>
+
+    <div class="legal-card">
+        <h2>Droits des utilisateurs</h2>
+        <p>
+            Conformément au RGPD, vous pouvez demander l'accès,
+            la modification ou la suppression de vos données.
+        </p>
+    </div>
+
+</div>
+
+{% endblock %}

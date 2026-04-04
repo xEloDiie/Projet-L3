@@ -1,0 +1,65 @@
+{% extends "base_public.html" %}
+
+{% block title %}Vérification 2FA{% endblock %}
+
+{% block content %}
+<div class="login-page-wrapper">
+
+    <div class="branding-top d-flex align-items-center mb-4">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" 
+             alt="Logo"
+             class="logo-image me-3">
+
+        <div>
+            <h1 class="brand-title">404HackNotFound</h1>
+            <p class="brand-subtitle">La sécurité avant tout !</p>
+        </div>
+    </div>
+
+    <div class="login-wrapper">
+        <div class="card login-card shadow-lg">
+            <div class="card-body p-4">
+
+                <h4 class="text-center mb-4">Code de vérification</h4>
+
+                <form method="POST" action="{{ url_for('auth.auth2fa') }}">
+                    <!-- ✅ CSRF TOKEN -->
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <div class="mb-3">
+                        <label class="form-label">Code reçu par mail</label>
+                        <input type="text" name="code_2fa" class="form-control custom-input" placeholder="Entrez le code" required>
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Valider
+                        </button>
+                    </div>
+                </form>
+
+                <form method="POST" action="{{ url_for('auth.resend_2fa_code') }}">
+                    <!-- ✅ CSRF TOKEN -->
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Renvoyer un nouveau code
+                        </button>
+                    </div>
+                </form>
+                
+                <hr>
+
+                <div class="text-center">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary btn-sm">
+                        Retour à la connexion
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

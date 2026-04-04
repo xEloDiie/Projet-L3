@@ -1,0 +1,96 @@
+{% extends "base_app.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Top 5 joueurs en dropup flottant -->
+<div class="dropup position-fixed bottom-0 start-0 m-3" style="z-index:1000;">
+    <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        🏆 Top 5
+    </button>
+    <div class="dropdown-menu p-3 top5" style="width:260px;">
+        <h6 class="mb-3">Classement</h6>
+        {% set max_points = top_players[0].points if top_players else 1 %}
+        {% for player in top_players %}
+        <div class="mb-2">
+            <div class="d-flex justify-content-between small">
+                <span>{{ player.username }}</span>
+                <span>{{ player.points }} pts</span>
+            </div>
+            <div class="progress" style="height:6px;">
+                <div class="progress-bar bg-success"
+                     style="width: {{ (player.points / max_points) * 100 }}%">
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Challenges disponibles -->
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h4 class="mb-4">Challenges disponibles</h4>
+        <div class="row">
+            {% for challenge in challenges %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5>{{ challenge.title }}</h5>
+                        <p class="text-muted">Difficulté : {{ challenge.difficulty }}</p>
+                        <p>{{ challenge.description }}</p>
+                        <p class="mb-1"><small>Résolu par {{ challenge.success_rate }}% des joueurs</small></p>
+                        <div class="progress mb-2">
+                            <div class="progress-bar bg-info"
+                                 role="progressbar"
+                                 style="width: {{ challenge.success_rate }}%"
+                                 aria-valuenow="{{ challenge.success_rate }}"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+                            </div>
+                        </div>
+                        {% if challenge._id in solved_challenges %}
+                            <span class="badge bg-success mb-2">Résolu</span>
+                        {% else %}
+                            <span class="badge bg-secondary mb-2">Non résolu</span>
+                        {% endif %}
+                        <div class="d-grid">
+                            <a href="{{ url_for('challenges.challenge_page', id=challenge.id) }}" class="btn btn-primary btn-sm">
+                                Ouvrir le challenge
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal notification de succès -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-success text-white">
+      <div class="modal-body text-center">
+        <h5 id="successModalMessage"></h5>
+        <button type="button" class="btn btn-light mt-3" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+{% if challenge_success %}
+<script>
+
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    document.getElementById('successModalMessage').textContent = "{{ challenge_success | safe}}";
+    successModal.show();
+
+</script>
+{% endif %}
+
+{% endblock %}

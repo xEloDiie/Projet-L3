@@ -1,0 +1,108 @@
+{% extends "base_public.html" %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block content %}
+<div class="login-page-wrapper">
+
+    <!-- Branding en haut à gauche -->
+    <div class="branding-top d-flex align-items-center">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" 
+             alt="Logo"
+             class="logo-image me-3">
+
+        <div>
+            <h1 class="brand-title">404HackNotFound</h1>
+            <p class="brand-subtitle">Rejoignez la plateforme cybersécurité</p>
+        </div>
+    </div>
+
+    <!-- Card centrée -->
+    <div class="login-wrapper">
+        <div class="card login-card shadow-lg">
+            <div class="card-body p-4">
+
+                <h4 class="text-center mb-4">Créer un compte</h4>
+
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    <!-- ✅ CSRF TOKEN -->
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Nom d'utilisateur</label>
+                        <input type="text" name="username" class="form-control custom-input" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Adresse e-mail</label>
+                        <input type="email" name="email" class="form-control custom-input" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Mot de passe</label>
+
+                        <div class="input-group">
+                            <input type="password" id="password" name="password" class="form-control custom-input" required>
+
+                            <!-- Bouton oeil -->
+                            <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                                👁️
+                            </button>
+                        </div>
+
+                        <!-- Message force -->
+                        <small id="passwordHelp" class="text-alerte">
+                            8 caractères min, majuscule, minuscule, chiffre, symbole
+                        </small>
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Créer un compte
+                        </button>
+                    </div>
+                </form>
+
+                <hr>
+
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary">
+                        Retour à la connexion
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const passwordInput = document.getElementById("password");
+const toggleBtn = document.getElementById("togglePassword");
+const help = document.getElementById("passwordHelp");
+
+// 👁️ afficher / cacher
+toggleBtn.addEventListener("click", () => {
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+    } else {
+        passwordInput.type = "password";
+    }
+});
+
+// vérification force
+passwordInput.addEventListener("input", () => {
+    const value = passwordInput.value;
+
+    const strong = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+
+    if (strong.test(value)) {
+        help.textContent = "Mot de passe fort ✅";
+        help.style.color = "green";
+    } else {
+        help.textContent = "Mot de passe trop faible ❌";
+        help.style.color = "red";
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base_app.html" %}
+
+{% block title %}{{ challenge.title }}{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h2>{{ challenge.title }}</h2>
+        <p class="text-muted">Difficulté : {{ challenge.difficulty }} | Points : {{ challenge.points }}</p>
+        <hr>
+        <p>{{ challenge.description }}</p>
+
+        <script>
+            localStorage.setItem("challenge_flag", "FLAG-65b8c4");
+        </script>
+
+        <div id="challenge-content">
+            {% if solved %}
+                <div class="alert alert-success mt-3">✅ Challenge déjà résolu !</div>
+            {% else %}
+                <p>Indice : le flag est stocké quelque part dans votre navigateur (localStorage).</p>
+                <form method="POST" action="{{ url_for('challenges.submit_flag', id=challenge._id) }}">
+                    <!-- ✅ CSRF TOKEN -->
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    
+                    <input type="text" name="flag" class="form-control" placeholder="Entrez le flag" required>
+                    <button type="submit" class="btn btn-primary mt-2">Soumettre</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

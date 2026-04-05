@@ -7,3 +7,4 @@ flask-talisman
 Flask-Mail
 tzdata
 flask-wtf
+gunicorn

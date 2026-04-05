@@ -23,7 +23,7 @@ class Config:
 
     # Durées et timeouts
     SESSION_TIMEOUT = timedelta(minutes=15)       # Timeout session
-    EMAIL_CODE_TIMEOUT = timedelta(minutes=15)    # Code email
+    EMAIL_CODE_TIMEOUT = timedelta(minutes=10)    # Code email
     TWO_FA_VALIDITY = timedelta(hours=24)         # Validité du 2FA sans renvoi de code
     EMAIL_RESEND_COOLDOWN = timedelta(seconds=30) # Anti-spam envoi email
 

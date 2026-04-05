@@ -383,7 +383,7 @@ def auth2fa():
 
 
 @auth_bp.route("/resend_2fa_code", methods=["POST"])
-@limiter.limit("2 per minute")
+@limiter.limit("5 per minute")
 def resend_2fa_code():
     if "pre_2fa_user_id" not in session:
         flash("Veuillez vous reconnecter pour recevoir un nouveau code.")

@@ -415,12 +415,12 @@ def resend_2fa_code():
 
     try:
         current_app.mail.send(msg)
+        flash("Un nouveau code a été envoyé par email.")
     except Exception as e:
         print("ERREUR SMTP RESET:", e)
         flash("Impossible d'envoyer l'email pour le moment.")
         return redirect(url_for("auth.login"))
 
-    flash("Un nouveau code a été envoyé par email.")
     return redirect(url_for("auth.auth2fa"))
 
 

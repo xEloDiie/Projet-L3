@@ -425,7 +425,7 @@ def resend_2fa_code():
 
 
 @auth_bp.route("/forgot_password", methods=["GET", "POST"])
-@limiter.limit("3 per minute")
+@limiter.limit("5 per minute")
 def forgot_password():
     if request.method == "POST":
         email = request.form["email"].strip().lower()

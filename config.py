@@ -16,6 +16,7 @@ class Config:
     MAIL_USE_TLS = os.getenv("MAIL_USE_TLS") == "True"
     MAIL_USE_SSL = os.getenv("MAIL_USE_SSL") == "True"
     MAIL_DEFAULT_SENDER = os.getenv("MAIL_DEFAULT_SENDER")
+    MAIL_TIMEOUT = 10
 
     # Fuseau horaire
     TIMEZONE = ZoneInfo("Europe/Paris")  # CET/CEST automatique

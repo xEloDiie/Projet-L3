@@ -30,3 +30,7 @@ class Config:
     # Rate limit
     RATELIMIT_STORAGE_URI = os.getenv("RATELIMIT_STORAGE_URI")
     RATELIMIT_STRATEGY = "fixed-window"
+
+    # Session Cookie
+    SESSION_COOKIE_SAMESITE = "None"
+    SESSION_COOKIE_SECURE = True

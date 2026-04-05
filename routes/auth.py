@@ -163,9 +163,15 @@ def login():
         msg = Message(
             subject="Votre code de connexion 404HackNotFound",
             recipients=[user["email"]],
-            body=f"Salut {user['username']} !\nVoici votre code de connexion : {verification_code}"
+            body=f"Bonjour {user['username']} !\nVoici votre code de connexion : {verification_code}"
         )
-        current_app.mail.send(msg)
+
+        try:
+            current_app.mail.send(msg)
+        except Exception as e:
+            print("Erreur reset_password mail:", e)
+            flash("Impossible d'envoyer l'email de réinitialisation pour le moment.")
+            return redirect(url_for("auth.login"))
 
         # Redirige vers la page pour saisir le code
         return redirect(url_for("auth.auth2fa"))
@@ -279,14 +285,19 @@ def register():
 
 def send_verification_email(user):
     token = user['verification_token']
-    verify_url = f"http://127.0.0.1:5000/auth/verify_email/{token}"
+    verify_url = f"https://four04hacknotfound.onrender.com/auth/verify_email/{token}"
     msg = Message(
         subject="Vérifiez votre email pour 404HackNotFound",
         recipients=[user['email']],
-        body=f"Salut {user['username']} !\nCliquez ici pour activer votre compte : {verify_url}"
+        body=f"Bonjour {user['username']} !\nCliquez ici pour activer votre compte : {verify_url}"
     )
-    mail = current_app.extensions.get('mail')  # récupérer l’instance Flask-Mail
-    mail.send(msg)
+
+    try:
+        mail = current_app.extensions.get('mail')
+        mail.send(msg)
+    except Exception as e:
+        print("ERREUR SMTP REGISTER:", e)
+        raise  # pour que register gère l’erreur
 
 
 @auth_bp.route("/auth/verify_email/<token>")
@@ -399,9 +410,15 @@ def resend_2fa_code():
     msg = Message(
         subject="Votre code de connexion 404HackNotFound",
         recipients=[user["email"]],
-        body=f"Salut {user['username']} !\nVoici votre code de connexion : {new_code}"
+        body=f"Bonjour {user['username']} !\nVoici votre code de connexion : {new_code}"
     )
-    current_app.mail.send(msg)
+
+    try:
+        current_app.mail.send(msg)
+    except Exception as e:
+        print("ERREUR SMTP RESET:", e)
+        flash("Impossible d'envoyer l'email pour le moment.")
+        return redirect(url_for("auth.login"))
 
     flash("Un nouveau code a été envoyé par email.")
     return redirect(url_for("auth.auth2fa"))
@@ -426,14 +443,20 @@ def forgot_password():
                 }}
             )
 
-            reset_url = url_for("auth.reset_password", token=token, _external=True)
+            reset_url = f"https://four04hacknotfound.onrender.com/reset_password/{token}"
 
             msg = Message(
                 subject="Réinitialisation de votre mot de passe",
                 recipients=[email],
                 body=f"Bonjour {user['username']} !\nCliquez ici pour réinitialiser votre mot de passe : {reset_url}"
             )
-            current_app.mail.send(msg)
+
+            try:
+                current_app.mail.send(msg)
+            except Exception as e:
+                print("ERREUR SMTP RESET:", e)
+                flash("Impossible d'envoyer l'email pour le moment.")
+                return redirect(url_for("auth.login"))
 
         # sécurité : ne pas dire si email existe
         flash("Si un compte existe avec cet email, un lien a été envoyé.")

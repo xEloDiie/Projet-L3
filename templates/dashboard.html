@@ -17,6 +17,7 @@
                 <span>{{ player.points }} pts</span>
             </div>
             <div class="progress" style="height:6px;">
+                <!-- Ignorer l'erreur : syntaxe Jinja non reconnue -->
                 <div class="progress-bar bg-success"
                      style="width: {{ (player.points / max_points) * 100 }}%">
                 </div>
@@ -28,35 +29,38 @@
 
 <!-- Challenges disponibles -->
 <div class="card shadow-sm">
-    <div class="card-body">
+    <div class="card-body ">
         <h4 class="mb-4">Challenges disponibles</h4>
         <div class="row">
             {% for challenge in challenges %}
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm">
-                    <div class="card-body">
+                    <div class="card-body d-flex flex-column">
                         <h5>{{ challenge.title }}</h5>
-                        <p class="text-muted">Difficulté : {{ challenge.difficulty }}</p>
+                        <p class="text-muted">Difficulté : {{ challenge.difficulty }} | Points : {{ challenge.points }}</p>
                         <p>{{ challenge.description }}</p>
-                        <p class="mb-1"><small>Résolu par {{ challenge.success_rate }}% des joueurs</small></p>
-                        <div class="progress mb-2">
-                            <div class="progress-bar bg-info"
-                                 role="progressbar"
-                                 style="width: {{ challenge.success_rate }}%"
-                                 aria-valuenow="{{ challenge.success_rate }}"
-                                 aria-valuemin="0"
-                                 aria-valuemax="100">
+                        <div class="info">  
+                            <p class="mb-1"><small>Résolu par {{ challenge.success_rate }}% des joueurs</small></p>
+                            <div class="progress mb-2">
+                                <!-- Ignorer l'erreur : syntaxe Jinja non reconnue -->
+                                <div class="progress-bar bg-info"
+                                    role="progressbar"
+                                    style="width: {{ challenge.success_rate }}%"
+                                    aria-valuenow="{{ challenge.success_rate }}"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100">
+                                </div>
                             </div>
-                        </div>
-                        {% if challenge._id in solved_challenges %}
-                            <span class="badge bg-success mb-2">Résolu</span>
-                        {% else %}
-                            <span class="badge bg-secondary mb-2">Non résolu</span>
-                        {% endif %}
-                        <div class="d-grid">
-                            <a href="{{ url_for('challenges.challenge_page', id=challenge.id) }}" class="btn btn-primary btn-sm">
-                                Ouvrir le challenge
-                            </a>
+                            {% if challenge._id in solved_challenges %}
+                                <span class="badge bg-success mb-2">Résolu</span>
+                            {% else %}
+                                <span class="badge bg-secondary mb-2">Non résolu</span>
+                            {% endif %}
+                            <div class="d-grid">
+                                <a href="{{ url_for('challenges.challenge_page', id=challenge.id) }}" class="btn btn-primary btn-sm">
+                                    Ouvrir le challenge
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -77,20 +81,15 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
-
-{% if challenge_success %}
-<script>
-
-    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-    document.getElementById('successModalMessage').textContent = "{{ challenge_success | safe}}";
-    successModal.show();
-
-</script>
-{% endif %}
-
+    {% if challenge_success %}
+        <script>
+            const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            document.getElementById('successModalMessage').textContent = "{{ challenge_success | safe}}";
+            successModal.show();
+        </script>
+    {% endif %}
 {% endblock %}

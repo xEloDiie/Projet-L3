@@ -1,14 +1,13 @@
 {% extends "base_public.html" %}
 
 {% block content %}
-
 <div class="legal-container">
 
     <h1 class="legal-title">Conditions d'utilisation</h1>
 
     <!-- Bouton retour login -->
     <div class="back-to-login">
-        <a href="{{ url_for('dashboard') if session.get('user_id') else url_for('login') }}"
+        <a href="{{ url_for('main.dashboard') if session.get('user_id') else url_for('auth.login') }}"
         class="btn btn-secondary">
             Retour
         </a>
@@ -44,7 +43,5 @@
             Ces conditions d'utilisation peuvent être modifiées à tout moment.
         </p>
     </div>
-
 </div>
-
 {% endblock %}

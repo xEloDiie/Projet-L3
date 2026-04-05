@@ -49,6 +49,11 @@ def global_security():
         'auth.auth2fa',
         'auth.verify_email',
         'auth.guest_login',
+        'main.mentions_legales',
+        'main.conditions_utilisation',
+        'main.rgpd',
+        'auth.forgot_password',
+        'auth.reset_password'
     ]
 
     # =========================
@@ -139,7 +144,8 @@ def store_last_page():
 
     # On stocke la page actuelle
     session["last_page"] = request.url
-    
 
+
+# Ignoré par Render avec utilisation de gunicorn
 if __name__ == "__main__":
     app.run(debug=True)

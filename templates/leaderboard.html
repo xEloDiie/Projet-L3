@@ -3,31 +3,27 @@
 {% block title %}Classement{% endblock %}
 
 {% block content %}
-
 <h2 class="mb-4">🏆 Classement</h2>
 
 <table class="table table-striped">
-<thead>
-<tr>
-<th>#</th>
-<th>Utilisateur</th>
-<th>Challenges résolus</th>
-<th>Points</th>
-</tr>
-</thead>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Utilisateur</th>
+            <th>Challenges résolus</th>
+            <th>Points</th>
+        </tr>
+    </thead>
 
-<tbody>
-
-{% for user in leaderboard %}
-<tr>
-<td>{{ loop.index }}</td>
-<td>{{ user.username }}</td>
-<td>{{ user.solved }}</td>
-<td><strong>{{ user.points }}</strong></td>
-</tr>
-{% endfor %}
-
-</tbody>
+    <tbody>
+        {% for user in leaderboard %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.solved }}</td>
+            <td><strong>{{ user.points }}</strong></td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
-
 {% endblock %}

@@ -29,21 +29,21 @@
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-3">
                         <label class="form-label">Nom d'utilisateur</label>
-                        <input type="text" name="username" class="form-control custom-input" required>
+                        <input type="text" name="username" class="form-control custom-input" placeholder="Entrez votre nom d'utilisateur" maxlength="20" required>
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label">Mot de passe</label>
                         <div class="input-group">
-                            <input type="password" id="loginPassword" name="password" class="form-control custom-input" required>
+                            <input type="password" id="loginPassword" name="password" class="form-control custom-input" placeholder="Entrez votre mot de passe" maxlength="64" required>
 
                             <button type="button" class="btn btn-outline-secondary" id="toggleLoginPassword">
                                 👁️
                             </button>
                         </div>
 
-                        <div class="mt-2">
-                            <a href="{{ url_for('auth.forgot_password') }}" class="text-alerte">
+                        <div class="mt-3">
+                            <a href="{{ url_for('auth.forgot_password') }}" target="_self" class="text-alerte">
                                 Mot de passe oublié ?
                             </a>
                         </div>
@@ -73,13 +73,16 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block scripts %}
+<!-- JS personnalisé -->
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+
+<!-- Appel fonctions JS -->
 <script>
-const loginPassword = document.getElementById("loginPassword");
-const toggleLogin = document.getElementById("toggleLoginPassword");
-
-toggleLogin.addEventListener("click", () => {
-    loginPassword.type = loginPassword.type === "password" ? "text" : "password";
-});
+    document.getElementById("toggleLoginPassword").addEventListener("click", () => {
+        togglePassword("loginPassword");
+    });
 </script>
 {% endblock %}

@@ -40,9 +40,11 @@ def to_utc(dt):
 def login():
     if request.method == "POST":
         username = request.form["username"].strip()
+        username_lower = username.lower()
         password = request.form["password"].strip()
 
-        user = users_collection.find_one({"username": username})
+        # Recherche insensible à la casse
+        user = users_collection.find_one({"username_lower": username_lower})
         now = datetime.now(timezone.utc)
 
         # Mauvais identifiants
@@ -176,12 +178,16 @@ def is_valid_email(email):
     return re.match(r"^[^@]+@[^@]+\.[^@]+$", email)
 
 
+def is_valid_username(username):
+    return len(username) <= 20 and re.match(r"^[A-Za-z0-9_.-]+$", username)
+
+
 def is_strong_password(password):
     return (
-        len(password) >= 8
+        8 <= len(password) <= 64
         and re.search(r"[A-Z]", password)
         and re.search(r"[a-z]", password)
-        and re.search(r"\d", password)
+        and re.search(r"\d", password) # Au moins 1 chiffre
         and re.search(r"[!@#$%^&*(),.?\":{}|<>]", password)
     )
 
@@ -193,6 +199,7 @@ def register():
 
     if request.method == "POST":
         username = request.form["username"].strip()
+        username_lower = username.lower()
         email = request.form["email"].strip().lower()
         password = request.form["password"].strip()
 
@@ -201,19 +208,24 @@ def register():
             flash("Adresse e-mail invalide.")
             return redirect(url_for("auth.register"))
 
+        # Vérifier si le nom d'utilisateur est valide
+        if not is_valid_username(username):
+            flash("Le nom d'utilisateur doit contenir au maximum 20 caractères et uniquement des lettres, des chiffres ou les caractères '.', '_' et '-'.")
+            return redirect(url_for("auth.register"))
+
         # Vérification si le mot de passe est valide
         if not is_strong_password(password):
-            flash("Mot de passe trop faible (8 caractères, majuscule, minuscule, chiffre, symbole).")
+            flash("Mot de passe trop faible/invalide ou supérieur à 64 caractères.")
             return redirect(url_for("auth.register"))
 
         # Vérification si le username existe déjà
-        if users_collection.find_one({"username": username}):
+        if users_collection.find_one({"username_lower": username_lower}):
             flash("Nom d'utilisateur déjà utilisé.")
             return redirect(url_for("auth.register"))
 
         # Vérification si le mail existe déjà
         if users_collection.find_one({"email": email}):
-            flash("Adresse e-mail déjà utilisée.")
+            flash("Adresse e-mail déjà utilisée pour un autre compte.")
             return redirect(url_for("auth.register"))
 
         user_role = roles_collection.find_one({"role_name": "user"})
@@ -221,10 +233,10 @@ def register():
         verification_token = secrets.token_urlsafe(32)
         totp_secret = pyotp.random_base32()
 
-        # ON PRÉPARE MAIS ON N'INSÈRE PAS ENCORE
         user = {
             "_id": next_id,
-            "username": username,
+            "username": username,              # version originale
+            "username_lower": username_lower,  # version normalisée pour comparaison
             "email": email,
             "password": ph.hash(password),
             "role": user_role["role_name"],
@@ -373,7 +385,7 @@ def resend_2fa_code():
 
     now = datetime.now(timezone.utc)
     last_email_sent = session.get("email_2fa_last_sent")
-    if last_email_sent and (now - datetime.fromisoformat(last_email_sent)) < timedelta(seconds=30):
+    if last_email_sent and (now - datetime.fromisoformat(last_email_sent)) < Config.EMAIL_RESEND_COOLDOWN:
         flash("Veuillez attendre un moment avant de demander un nouveau code.")
         return redirect(url_for("auth.auth2fa"))
 
@@ -449,7 +461,7 @@ def reset_password(token):
         password = request.form["password"].strip()
 
         if not is_strong_password(password):
-            flash("Mot de passe trop faible.")
+            flash("Mot de passe trop faible/invalide ou supérieur à 64 caractères.")
             return redirect(request.url)
 
         new_hash = ph.hash(password)

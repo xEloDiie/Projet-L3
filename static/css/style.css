@@ -153,12 +153,14 @@ body.dark-theme a.text-alerte:hover {
 body:not(.dark-theme) .btn-secondary {
     background: linear-gradient(135deg, #667eea, #764ba2);
     border: none;
+    padding: 0.3rem 0.5rem;
     transition: all 0.3s ease;
 }
 
 body.dark-theme .btn-secondary {
     background: linear-gradient(135deg, #2f3f67, #18243f);
     border: none;
+    padding: 0.3rem 0.5rem;
     transition: all 0.3s ease;
 }
 
@@ -279,6 +281,22 @@ body.dark-theme .alert {
     background-color: rgba(36,48,66,0.85);
     border: 1px solid rgba(59,74,99,0.8);
     color: #ffffff;
+}
+
+body.dark-theme .btn-close {
+    --bs-btn-close-white-filter: invert(1) grayscale(100%) brightness(200%);
+    filter: var(--bs-btn-close-white-filter);
+    --bs-btn-close-opacity: 0.9;
+}
+
+body:not(.dark-theme) .alert {
+    background-color: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #000000;
+}
+
+body:not(.dark-theme) .btn-close {
+    --bs-btn-close-opacity: 0.6;
 }
 
 /* =========================
@@ -615,9 +633,16 @@ body.dark-theme .site-footer {
     padding: 20px;
 }
 
-.legal-title {
+body.dark-theme .legal-title {
     text-align: center;
     margin-bottom: 40px;
+    color: #ffffff;
+}
+
+body:not(.dark-theme) .legal-title {
+    text-align: center;
+    margin-bottom: 40px;
+    color: #000000;
 }
 
 .legal-card {
@@ -786,9 +811,15 @@ body {
     min-height: 100vh; /* hauteur minimale = 100% de la fenêtre */
 }
 
+/* alignement en bas des boutons card  */
+.info {
+    margin-top: auto;
+}
+
 /* Le main prend tout l'espace restant */
 main.container {
     flex: 1;
+    align-items: center;
 }
 
 /* Optionnel : style du footer si tu veux qu'il reste visible et bien contrasté */

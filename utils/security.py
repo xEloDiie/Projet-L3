@@ -1,3 +1,4 @@
+import os
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 from flask_wtf import CSRFProtect
@@ -26,7 +27,28 @@ def init_security(app):
     csrf.init_app(app)
 
     # HTTPS + headers sécurité
-    Talisman(app, content_security_policy=None, force_https=False)
+    csp = {
+    "default-src": "'self'",
+
+    "script-src": [
+        "'self'",
+        "https://cdn.jsdelivr.net",
+        "'unsafe-inline'"
+    ],
+
+    "style-src": [
+        "'self'",
+        "https://cdn.jsdelivr.net",
+        "'unsafe-inline'"
+    ],
+
+    "img-src": [
+        "'self'",
+        "data:"
+    ]
+}
+    
+    Talisman(app, content_security_policy=csp, force_https=not app.debug)
 
     # Rate limiting
     limiter.init_app(app)

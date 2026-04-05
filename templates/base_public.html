@@ -1,146 +1,115 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}404HackNotFound{% endblock %}</title>
-    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <title>{% block title %}404HackNotFound{% endblock %}</title>
+        <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+        
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-    {% block head %}{% endblock %}
-</head>
+        {% block head %}{% endblock %}
+    </head>
 
-<body>
+    <body>
 
-    <!-- Contenu principal -->
-    <main class="container mt-4">
+        <!-- Contenu principal -->
+        <main class="container mt-4">
 
-        <!-- Messages flash -->
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-info alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+            <!-- Messages flash -->
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 
-        {% block content %}{% endblock %}
+            {% block content %}{% endblock %}
 
-    </main>
+        </main>
 
-    <!-- Toggle Jour/Nuit -->
-    <div class="theme-toggle position-fixed bottom-0 end-0 m-3">
-        <input type="checkbox" id="themeSwitch" hidden>
-        <label for="themeSwitch" class="btn btn-light btn-sm d-flex align-items-center">
-            <span id="sun" class="me-1">🌞</span>
-            <span id="moon" class="me-1 d-none">🌜</span>
-            <span>Mode</span>
-        </label>
-    </div>
-
-    <footer class="site-footer mt-5">
-        <div class="container py-4">
-
-            <div class="row text-center text-md-start">
-
-                <!-- Nom du site -->
-                <div class="col-md-4 mb-3">
-                    <h6 class="fw-bold">404HackNotFound</h6>
-                    <p class="small mb-0">
-                        Plateforme d'entraînement CTF dédiée à la cybersécurité,
-                        au pentest et à l'apprentissage du hacking éthique.
-                    </p>
-                </div>
-
-                <!-- Liens légaux -->
-                <div class="col-md-4 mb-3">
-                    <h6 class="fw-bold">Informations légales</h6>
-                    <ul class="list-unstyled small">
-                        <li>
-                            <a href="{{ url_for('main.mentions_legales') }}" class="footer-link">
-                                Mentions légales
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{{ url_for('main.conditions_utilisation') }}" class="footer-link">
-                                Conditions d'utilisation
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{{ url_for('main.rgpd') }}" class="footer-link">
-                                Protection des données (RGPD)
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Contact -->
-                <div class="col-md-4 mb-3">
-                    <h6 class="fw-bold">Contact</h6>
-                    <ul class="list-unstyled small">
-                        <li><p>Nous contacter</p></li>
-                        <li>Email : project.404hacknotfound@gmail.com</li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <hr>
-
-            <!-- Copyright -->
-            <div class="text-center small">
-                © <span id="year"></span> 404HackNotFound • Tous droits réservés
-            </div>
-
+        <!-- Toggle Jour/Nuit -->
+        <div class="theme-toggle position-fixed bottom-0 end-0 m-3">
+            <input type="checkbox" id="themeSwitch" hidden>
+            <label for="themeSwitch" class="btn btn-light btn-sm d-flex align-items-center">
+                <span id="sun" class="me-1">🌞</span>
+                <span id="moon" class="me-1 d-none">🌜</span>
+                <span>Mode</span>
+            </label>
         </div>
-    </footer>
 
+        <footer class="site-footer mt-5">
+            <div class="container py-4">
+
+                <div class="row text-center">
+
+                    <!-- Nom du site -->
+                    <div class="col-md-3 mx-md-5 mb-2 text-start">
+                        <h6 class="fw-bold text-center">404HackNotFound</h6>
+                        <p class="small mb-0">
+                            Plateforme d'entraînement CTF dédiée à la cybersécurité,
+                            au pentest et à l'apprentissage du hacking éthique.
+                        </p>
+                    </div>
+
+                    <!-- Liens légaux -->
+                    <div class="col-md-3 mx-md-5 mb-2 text-start">
+                        <h6 class="fw-bold text-center">Informations légales</h6>
+                        <ul class="list-unstyled small">
+                            <li>
+                                <a href="{{ url_for('main.mentions_legales') }}" class="footer-link">
+                                    Mentions légales
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ url_for('main.conditions_utilisation') }}" class="footer-link">
+                                    Conditions d'utilisation
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ url_for('main.rgpd') }}" class="footer-link">
+                                    Protection des données (RGPD)
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="col-md-3 mx-md-5 mb-2 text-start">
+                        <h6 class="fw-bold text-center">Contact</h6>
+                        <ul class="list-unstyled small">
+                            <li><p>Nous contacter :</p></li>
+                            <li>Email : project.404hacknotfound@gmail.com</li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <!-- Copyright -->
+                <div class="text-center small">
+                    © <span id="year"></span> 404HackNotFound • Tous droits réservés
+                </div>
+
+            </div>
+        </footer>
+        
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- JS personnalisé -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-    {% block scripts %}
-    <script>
-        document.getElementById("year").textContent = new Date().getFullYear();
-        
-        const themeSwitch = document.getElementById('themeSwitch');
-        const body = document.body;
-        const sun = document.getElementById('sun');
-        const moon = document.getElementById('moon');
-
-        // Appliquer le thème enregistré au chargement
-        if (localStorage.getItem('theme') === 'dark') {
-            body.classList.add('dark-theme');
-            themeSwitch.checked = true;
-            sun.classList.add('d-none');
-            moon.classList.remove('d-none');
-        }
-
-        themeSwitch.addEventListener('change', () => {
-            body.classList.toggle('dark-theme');
-            if (body.classList.contains('dark-theme')) {
-                sun.classList.add('d-none');
-                moon.classList.remove('d-none');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                sun.classList.remove('d-none');
-                moon.classList.add('d-none');
-                localStorage.setItem('theme', 'light');
-            }
-        });
-    </script>
-    {% endblock %}
-
-</body>
+    {% block scripts %}{% endblock %}
+    </body>
 </html>

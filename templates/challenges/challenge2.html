@@ -3,6 +3,14 @@
 {% block title %}{{ challenge.title }}{% endblock %}
 
 {% block content %}
+<!-- Bouton retour -->
+<div class="back-to-menu mb-3">
+    <a href="{{ url_for('main.dashboard')}}"
+    class="btn btn-secondary">
+        Retour
+    </a>
+</div>
+
 <div class="card shadow-sm mb-4">
     <div class="card-body">
         <h2>{{ challenge.title }}</h2>

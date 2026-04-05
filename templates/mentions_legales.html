@@ -1,14 +1,13 @@
 {% extends "base_public.html" %}
 
 {% block content %}
-
 <div class="legal-container">
 
     <h1 class="legal-title">Mentions légales</h1>
 
     <!-- Bouton retour login -->
     <div class="back-to-login">
-        <a href="{{ url_for('dashboard') if session.get('user_id') else url_for('login') }}"
+        <a href="{{ url_for('main.dashboard') if session.get('user_id') else url_for('auth.login') }}"
         class="btn btn-secondary">
             Retour
         </a>
@@ -19,17 +18,17 @@
         <p>Ce site est un projet réalisé dans le cadre d'un projet universitaire.</p>
 
         <ul class="legal-list">
-            <li><strong>Nom :</strong> Votre nom</li>
-            <li><strong>Statut :</strong> Étudiant en Licence 3</li>
-            <li><strong>Université :</strong> Nom de l'université</li>
-            <li><strong>Email :</strong> votre.email@exemple.com</li>
+            <li><strong>Noms :</strong> Alan et Elodie</li>
+            <li><strong>Statut :</strong> Étudiants en 3ème année de Licence Informatique</li>
+            <li><strong>Université :</strong> UPHF-INSA</li>
+            <li><strong>Email :</strong> project.404hacknotfound@gmail.com</li>
         </ul>
     </div>
 
     <div class="legal-card">
         <h2>Hébergement</h2>
         <p>
-            Ce site est actuellement hébergé dans le cadre d'un projet pédagogique.
+            Ce site est actuellement hébergé sur Render dans le cadre d'un projet pédagogique.
         </p>
     </div>
 
@@ -40,7 +39,5 @@
             Toute reproduction sans autorisation est interdite.
         </p>
     </div>
-
 </div>
-
 {% endblock %}

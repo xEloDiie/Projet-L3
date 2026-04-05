@@ -1,14 +1,13 @@
 {% extends "base_public.html" %}
 
 {% block content %}
-
 <div class="legal-container">
 
     <h1 class="legal-title">Protection des données (RGPD)</h1>
 
     <!-- Bouton retour login -->
     <div class="back-to-login">
-        <a href="{{ url_for('dashboard') if session.get('user_id') else url_for('login') }}"
+        <a href="{{ url_for('main.dashboard') if session.get('user_id') else url_for('auth.login') }}"
         class="btn btn-secondary">
             Retour
         </a>
@@ -41,10 +40,10 @@
         <h2>Droits des utilisateurs</h2>
         <p>
             Conformément au RGPD, vous pouvez demander l'accès,
-            la modification ou la suppression de vos données.
+            la modification ou la suppression de vos données à l'adresse suivante : 
+            <strong>project.404HackNotFound@gmail.com</strong>
         </p>
     </div>
 
 </div>
-
 {% endblock %}

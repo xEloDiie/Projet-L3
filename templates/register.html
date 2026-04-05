@@ -30,30 +30,31 @@
                     
                     <div class="mb-3">
                         <label class="form-label">Nom d'utilisateur</label>
-                        <input type="text" name="username" class="form-control custom-input" required>
+                        <input type="text" name="username" class="form-control custom-input" placeholder="Entrez votre nom d'utilisateur" maxlength="20" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Adresse e-mail</label>
-                        <input type="email" name="email" class="form-control custom-input" required>
+                        <input type="email" name="email" class="form-control custom-input" placeholder="Entrez votre adresse e-mail" required>
                     </div>
 
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label class="form-label">Mot de passe</label>
 
                         <div class="input-group">
-                            <input type="password" id="password" name="password" class="form-control custom-input" required>
+                            <input type="password" id="password" name="password" class="form-control custom-input" placeholder="Entrez votre mot de passe" maxlength="64" required>
 
                             <!-- Bouton oeil -->
                             <button type="button" class="btn btn-outline-secondary" id="togglePassword">
                                 👁️
                             </button>
                         </div>
-
-                        <!-- Message force -->
-                        <small id="passwordHelp" class="text-alerte">
-                            8 caractères min, majuscule, minuscule, chiffre, symbole
-                        </small>
+                        <div class="mt-2">
+                            <!-- Message force -->
+                            <small id="passwordHelp" class="text-alerte">
+                                8 caractères min, majuscule, minuscule, chiffre, symbole
+                            </small>
+                        </div>
                     </div>
 
                     <div class="d-grid mb-3">
@@ -75,34 +76,17 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block scripts %}
+<!-- JS personnalisé -->
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+
+<!-- Appel fonctions JS -->
 <script>
-const passwordInput = document.getElementById("password");
-const toggleBtn = document.getElementById("togglePassword");
-const help = document.getElementById("passwordHelp");
-
-// 👁️ afficher / cacher
-toggleBtn.addEventListener("click", () => {
-    if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-    } else {
-        passwordInput.type = "password";
-    }
-});
-
-// vérification force
-passwordInput.addEventListener("input", () => {
-    const value = passwordInput.value;
-
-    const strong = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
-
-    if (strong.test(value)) {
-        help.textContent = "Mot de passe fort ✅";
-        help.style.color = "green";
-    } else {
-        help.textContent = "Mot de passe trop faible ❌";
-        help.style.color = "red";
-    }
-});
+    initPasswordStrength("password", "passwordHelp");
+    document.getElementById("togglePassword").addEventListener("click", () => {
+        togglePassword("password");
+    });
 </script>
 {% endblock %}

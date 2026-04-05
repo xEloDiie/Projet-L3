@@ -2,55 +2,66 @@
 {% block title %}Admin - Challenges{% endblock %}
 
 {% block content %}
-<h2>Gérer les Challenges</h2>
+<!-- Bouton retour -->
+<div class="back-to-menu mb-3">
+    <a href="{{ url_for('main.dashboard')}}"
+    class="btn btn-secondary">
+        Retour
+    </a>
+</div>
 
-<form method="POST" class="mb-4">
-    <!-- CSRF TOKEN -->
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h2>Gérer les Challenges</h2>
 
-    <div class="mb-3">
-        <label class="form-label">Titre</label>
-        <input type="text" name="title" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Description</label>
-        <textarea name="description" class="form-control" required></textarea>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Difficulté</label>
-        <select name="difficulty" class="form-select">
-            <option value="Facile">Facile</option>
-            <option value="Moyen">Moyen</option>
-            <option value="Difficile">Difficile</option>
-        </select>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Points</label>
-        <input type="number" name="points" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Flag du challenge</label>
-        <input type="text" name="flag" class="form-control" required>
-    </div>
-    <button class="btn btn-primary">Ajouter</button>
-</form>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-success mt-2">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+        <form method="POST" class="mb-4">
+            <!-- CSRF TOKEN -->
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-<hr>
+            <div class="mb-3">
+                <label class="form-label">Titre</label>
+                <input type="text" name="title" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea name="description" class="form-control" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Difficulté</label>
+                <select name="difficulty" class="form-select">
+                    <option value="Facile">Facile</option>
+                    <option value="Moyen">Moyen</option>
+                    <option value="Difficile">Difficile</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Points</label>
+                <input type="number" name="points" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Flag du challenge</label>
+                <input type="text" name="flag" class="form-control" required>
+            </div>
+            <button class="btn btn-primary">Ajouter</button>
+        </form>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-success mt-2">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+            
+        <hr>
 
-<h3>Liste des Challenges</h3>
-<ul class="list-group">
-    {% for ch in challenges %}
-        <li class="list-group-item">{{ ch.title }} - {{ ch.difficulty }} - {{ ch.points }} pts</li>
-    {% endfor %}
-</ul>
-
+        <h3>Liste des Challenges</h3>
+        <ul class="list-group">
+            {% for ch in challenges %}
+                <li class="list-group-item">{{ ch.title }} - {{ ch.difficulty }} - {{ ch.points }} pts</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}

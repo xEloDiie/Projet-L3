@@ -315,10 +315,11 @@ def verify_email(token):
 
     flash("Email vérifié avec succès ! Vous pouvez maintenant vous connecter.")
     return redirect(url_for("auth.login"))
-
+print("DEBUG AUTH2FA SESSION:", dict(session))
 
 @auth_bp.route("/auth2fa", methods=["GET", "POST"])
 def auth2fa():
+    print("DEBUG AUTH2FA SESSION:", dict(session))
     # Vérifie qu'un utilisateur est en cours de pré-auth
     pre_user_id = session.get("pre_2fa_user_id")
     if not pre_user_id:
@@ -385,6 +386,7 @@ def auth2fa():
 @auth_bp.route("/resend_2fa_code", methods=["POST"])
 @limiter.limit("5 per minute")
 def resend_2fa_code():
+    print("DEBUG SESSION:", dict(session))
     if "pre_2fa_user_id" not in session:
         flash("Veuillez vous reconnecter pour recevoir un nouveau code.")
         return redirect(url_for("auth.login"))

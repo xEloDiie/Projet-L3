@@ -174,7 +174,7 @@ def login():
         )
 
         try:
-            send_email(msg, async_mode=False)
+            send_email(msg)
             flash("Un code d'authentification vous a été envoyé par e-mail.")
         except Exception as e:
             print("Erreur reset_password mail:", e)
@@ -296,19 +296,19 @@ def register():
     return render_template("register.html")
 
 
-def send_email(msg, async_mode=False):
-    mail = current_app.extensions.get('mail')
+def send_email(msg):
+    app = current_app._get_current_object()
 
-    if async_mode:
-        app = current_app._get_current_object()
-
-        def task():
-            with app.app_context():
+    def task():
+        with app.app_context():
+            try:
+                mail = app.extensions.get('mail')
                 mail.send(msg)
+            except Exception as e:
+                print("THREAD FAIL → fallback sync:", e)
+                mail.send(msg)  # fallback direct
 
-        threading.Thread(target=task).start()
-    else:
-        mail.send(msg)
+    threading.Thread(target=task, daemon=True).start()
 
 
 def send_verification_email(user):

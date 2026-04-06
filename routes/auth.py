@@ -299,16 +299,17 @@ def register():
 def send_email(msg):
     app = current_app._get_current_object()
 
-    def task():
+    def task(app, msg):
         with app.app_context():
             try:
                 mail = app.extensions.get('mail')
                 mail.send(msg)
+                print("MAIL ENVOYÉ ✅")
             except Exception as e:
-                print("THREAD FAIL → fallback sync:", e)
-                mail.send(msg)  # fallback direct
+                print("ERREUR SMTP THREAD:", e)
 
-    threading.Thread(target=task, daemon=True).start()
+    thread = threading.Thread(target=task, args=(app, msg))
+    thread.start()
 
 
 def send_verification_email(user):

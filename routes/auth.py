@@ -36,7 +36,7 @@ def to_utc(dt):
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
-@limiter.limit("10 per minute", methods=["POST"])
+#@limiter.limit("10 per minute", methods=["POST"])
 def login():
     if request.method == "POST":
         username = request.form["username"].strip()
@@ -199,7 +199,7 @@ def is_strong_password(password):
 
 
 @auth_bp.route("/register", methods=["GET", "POST"])
-@limiter.limit("10 per minute", methods=["POST"])
+#@limiter.limit("10 per minute", methods=["POST"])
 def register():
     global next_id
 
@@ -315,7 +315,7 @@ def verify_email(token):
 
     flash("Email vérifié avec succès ! Vous pouvez maintenant vous connecter.")
     return redirect(url_for("auth.login"))
-print("DEBUG AUTH2FA SESSION:", dict(session))
+
 
 @auth_bp.route("/auth2fa", methods=["GET", "POST"])
 def auth2fa():
@@ -384,7 +384,7 @@ def auth2fa():
 
 
 @auth_bp.route("/resend_2fa_code", methods=["POST"])
-@limiter.limit("5 per minute")
+#@limiter.limit("5 per minute")
 def resend_2fa_code():
     print("DEBUG SESSION:", dict(session))
     if "pre_2fa_user_id" not in session:
@@ -427,7 +427,7 @@ def resend_2fa_code():
 
 
 @auth_bp.route("/forgot_password", methods=["GET", "POST"])
-@limiter.limit("5 per minute")
+#@limiter.limit("5 per minute", methods=["POST"])
 def forgot_password():
     if request.method == "POST":
         email = request.form["email"].strip().lower()
@@ -468,7 +468,7 @@ def forgot_password():
 
 
 @auth_bp.route("/reset_password/<token>", methods=["GET", "POST"])
-@limiter.limit("5 per minute")
+#@limiter.limit("5 per minute", methods=["POST"])
 def reset_password(token):
     user = users_collection.find_one({"reset_token": token})
 

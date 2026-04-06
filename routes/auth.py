@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, current_app
 from db.mongo import users_collection, roles_collection, users_progression_collection, logs_collection
-from datetime import datetime, timedelta, timezone
-import secrets, pyotp, random, re
+from datetime import datetime, timezone
+import secrets, pyotp, random, re, threading
 from flask_mail import Message
 from config import Config
 from argon2 import PasswordHasher
@@ -167,7 +167,7 @@ def login():
         )
 
         try:
-            current_app.mail.send(msg)
+            send_email(msg)
             flash("Un code d'authentification vous a été envoyé par e-mail.")
         except Exception as e:
             print("Erreur reset_password mail:", e)
@@ -253,11 +253,11 @@ def register():
         }
 
         try:
-            # TEST envoi email AVANT insertion
-            send_verification_email(user)
-
-            # INSERTION UNIQUEMENT SI EMAIL OK
+            # INSERTION DIRECTE
             users_collection.insert_one(user)
+
+            # Envoi email en async
+            send_verification_email(user)
 
             users_progression_collection.insert_one({
                 "user_id": user["_id"],
@@ -284,21 +284,32 @@ def register():
 
     return render_template("register.html")
 
+
+def send_email(msg):
+    app = current_app._get_current_object()
+
+    def task():
+        with app.app_context():
+            try:
+                mail = app.extensions.get('mail')
+                mail.send(msg)
+            except Exception as e:
+                print("ERREUR SMTP:", e)
+
+    threading.Thread(target=task).start()
+
+
 def send_verification_email(user):
     token = user['verification_token']
     verify_url = f"https://four04hacknotfound.onrender.com/auth/verify_email/{token}"
+
     msg = Message(
         subject="Vérifiez votre email pour 404HackNotFound",
         recipients=[user['email']],
-        body=f"Bonjour {user['username']} !\nCliquez ici pour activer votre compte : {verify_url}"
+        body=f"Bonjour {user['username']} !\nCliquez ici : {verify_url}"
     )
 
-    try:
-        mail = current_app.extensions.get('mail')
-        mail.send(msg)
-    except Exception as e:
-        print("ERREUR SMTP REGISTER:", e)
-        raise  # pour que register gère l’erreur
+    send_email(msg)
 
 
 @auth_bp.route("/auth/verify_email/<token>")
@@ -417,7 +428,7 @@ def resend_2fa_code():
     )
 
     try:
-        current_app.mail.send(msg)
+        send_email(msg)
         flash("Un nouveau code a été envoyé par email.")
     except Exception as e:
         print("ERREUR SMTP RESET:", e)
@@ -455,7 +466,7 @@ def forgot_password():
             )
 
             try:
-                current_app.mail.send(msg)
+                send_email(msg)
             except Exception as e:
                 print("ERREUR SMTP RESET:", e)
                 flash("Impossible d'envoyer l'email pour le moment.")

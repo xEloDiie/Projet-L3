@@ -168,6 +168,7 @@ def login():
 
         try:
             current_app.mail.send(msg)
+            flash("Un code d'authentification vous a été envoyé par e-mail.")
         except Exception as e:
             print("Erreur reset_password mail:", e)
             flash("Impossible d'envoyer l'email de réinitialisation pour le moment.")

@@ -53,7 +53,8 @@ def global_security():
         'main.conditions_utilisation',
         'main.rgpd',
         'auth.forgot_password',
-        'auth.reset_password'
+        'auth.reset_password',
+        'auth.resend_2fa_code'
     ]
 
     # =========================

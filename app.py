@@ -83,7 +83,7 @@ def global_security():
     # =========================
     # Vérification connexion (hors invité)
     # =========================
-    if "user_id" not in session and session.get("role") != "visitor":
+    if "user_id" not in session and session.get("role") != "visiteur":
         return redirect(url_for("auth.login"))
 
     # =========================

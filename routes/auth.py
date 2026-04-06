@@ -235,7 +235,7 @@ def register():
             flash("Adresse e-mail déjà utilisée pour un autre compte.")
             return redirect(url_for("auth.register"))
 
-        user_role = roles_collection.find_one({"role_name": "user"})
+        user_role = roles_collection.find_one({"role_name": "membre"})
 
         verification_token = secrets.token_urlsafe(32)
         totp_secret = pyotp.random_base32()
@@ -508,7 +508,7 @@ def reset_password(token):
 
 @auth_bp.route("/guest_login")
 def guest_login():
-    visitor_role = roles_collection.find_one({"role_name": "visitor"})
+    visitor_role = roles_collection.find_one({"role_name": "visiteur"})
 
     if not visitor_role:
         flash("Rôle invité introuvable.")

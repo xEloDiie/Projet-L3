@@ -278,8 +278,8 @@ def register():
             return redirect(url_for("auth.login"))
 
         except Exception as e:
-            print("Erreur envoi mail :", e)
-            flash("Erreur lors de l'envoi de l'email. Réessayez.")
+            print("ERREUR REGISTER:", repr(e))
+            flash("Erreur lors de la création du compte.")
             return redirect(url_for("auth.register"))
 
     return render_template("register.html")
